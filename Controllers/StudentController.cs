@@ -6,7 +6,7 @@ using UserInfoAPI.Services.DTO;
 
 namespace UserInfoAPI.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
     public class StudentController : ControllerBase
     {
@@ -33,7 +33,7 @@ namespace UserInfoAPI.Controllers
         }
 
         [HttpGet("{id:int}")]
-        public async Task<IActionResult> GetTeacher(int id)
+        public async Task<IActionResult> GetStudent(int id)
         {
             var result = await _studentService.GetStudent(id);  
             return Ok(result);
