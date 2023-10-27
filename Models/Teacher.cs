@@ -14,7 +14,7 @@ namespace UserInfoAPI.Models
         public string? Name { get; set; }
         public string? Surname { get; set; }
         [Required]
-        public DateOnly DateOfBirth { get; set; }
+        public DateTime DateOfBirth { get; set; }
         [Required]
         public string? TeacherNumber { get; set; }
         [Column("Salary")]

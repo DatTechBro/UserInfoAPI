@@ -9,7 +9,7 @@ namespace UserInfoAPI.Interfaces
     public interface ITeacherService
     {
         Task<ResultModel<string>> CreateTeacher(TeacherDTO model);
-        Task<ResultModel<List<TeacherVM>>> GetAllTeachers();
+        List<Teacher> GetAllTeachers();
         Task<ResultModel<TeacherVM>> GetTeacher(int Id);
 
     }

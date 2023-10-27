@@ -31,6 +31,12 @@ namespace UserInfoAPI.Services
                     result.AddError("Model Cannot be Empty");
                     return result;
                 }
+                var isAgeValid = CalculateAge(model.DateOfBirth);
+                if (!isAgeValid) 
+                {
+                    result.AddError("Sorry only Teachers below 22 years of age can register.");
+                    return result;
+                }
                 var checkIdNumber = _dataContext.Teachers.Where(x => x.NationalIDNumber.ToLower().Contains(model.NationalIDNumber.ToLower()));
                 if (checkIdNumber.Any())
                 {
@@ -55,40 +61,51 @@ namespace UserInfoAPI.Services
             }
             catch (Exception ex) 
             {
-
+                result.AddError("An error occurred: " + ex.Message);
             }
             return result;
         }
 
-        public async Task<ResultModel<List<TeacherVM>>>GetAllTeachers()
+        public List<Teacher> GetAllTeachers()
         {
-            var result = new ResultModel<List<TeacherVM>>();
-            try
+            var teachers = _dataContext.Teachers.ToList();
+            return teachers;  
+        }
+        private static bool CalculateAge(DateTime birthDate)
+        {
+            DateTime currentDate = DateTime.Today;
+            int age = currentDate.Year - birthDate.Year;
+
+            // Check if the birthdate has occurred this year
+            if (birthDate.Date > currentDate.AddYears(-age))
             {
-                var teachers = await _dataContext.Teachers.ToListAsync();
-                var data = teachers.Select(x => (TeacherVM)x).ToList();
-                result.Data = data;
-                return result;
+                age--;
             }
-            catch (Exception ex) 
-            {
-            }
-            return result;
+            return age <= 21;
         }
 
         public async Task<ResultModel<TeacherVM>> GetTeacher(int Id)
         {
-            var result = new ResultModel<TeacherVM>();  
-            var teacher = _dataContext.Teachers.FirstOrDefault(x => x.Id == Id);  
-            if(teacher == null)
+            var result = new ResultModel<TeacherVM>();
+            try 
             {
-                result.AddError($"Teacher with {Id} Does Not Exist");
+                var teacher = await _dataContext.Teachers.FirstOrDefaultAsync(x => x.Id == Id);
+                if (teacher == null)
+                {
+                    result.AddError($"Teacher with {Id} Does Not Exist");
+                    return result;
+                }
+                TeacherVM teacherVM = teacher;
+                result.Message = "Successfully";
+                result.Data = teacherVM;
                 return result;
             }
-            TeacherVM teacherVM = teacher;
-            result.Message = "Successfully";
-            result.Data = teacherVM;    
+            catch (Exception ex) 
+            {
+                result.AddError("An error occurred: " + ex.Message);
+            }
             return result;
+           
             
         }
     }
