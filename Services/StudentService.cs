@@ -27,6 +27,12 @@ namespace UserInfoAPI.Services
                     result.AddError("Model Cannot be Empty");
                     return result;
                 }
+                var isAgeValid = CalculateAge(model.DateOfBirth);
+                if (!isAgeValid)
+                {
+                    result.AddError("Sorry only Teachers below 22 years of age can register.");
+                    return result;
+                }
                 var checkIdNumber = _dataContext.Students.Where(x => x.NationalIDNumber.ToLower().Contains(model.NationalIDNumber.ToLower()));
                 if (checkIdNumber.Any())
                 {
@@ -52,6 +58,18 @@ namespace UserInfoAPI.Services
 
             }
             return result;
+        }
+        private static bool CalculateAge(DateTime birthDate)
+        {
+            DateTime currentDate = DateTime.Today;
+            int age = currentDate.Year - birthDate.Year;
+
+            // Check if the birthdate has occurred this year
+            if (birthDate.Date > currentDate.AddYears(-age))
+            {
+                age--;
+            }
+            return age <= 22;
         }
 
         public async Task<ResultModel<List<StudentVM>>> GetAllStudents()

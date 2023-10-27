@@ -73,7 +73,7 @@ namespace UserInfoAPI.Services
         }
         private static bool CalculateAge(DateTime birthDate)
         {
-            DateTime currentDate = DateTime.Today;
+            DateTime currentDate = DateTime.Today.Date;
             int age = currentDate.Year - birthDate.Year;
 
             // Check if the birthdate has occurred this year

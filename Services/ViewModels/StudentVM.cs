@@ -7,7 +7,7 @@ namespace UserInfoAPI.Services.ViewModels
         public string? NationalIDNumber { get; set; }
         public string? Name { get; set; }
         public string? Surname { get; set; }
-        public DateOnly DateOfBirth { get; set; }
+        public DateTime DateOfBirth { get; set; }
         public string? StudentNumber { get; set; }
 
         public static implicit operator StudentVM(Student model)
