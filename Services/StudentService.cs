@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.EntityFrameworkCore;
 using UserInfoAPI.DataAccess;
 using UserInfoAPI.Interfaces;
 using UserInfoAPI.Models;
@@ -53,14 +54,35 @@ namespace UserInfoAPI.Services
             return result;
         }
 
-        public Task<ResultModel<List<StudentVM>>> GetAllStudents()
+        public async Task<ResultModel<List<StudentVM>>> GetAllStudents()
         {
-            throw new NotImplementedException();
+            var result = new ResultModel<List<StudentVM>>();
+            try
+            {
+                var students = await _dataContext.Students.ToListAsync();
+                var data = students.Select(x => (StudentVM)x).ToList();
+                result.Data = data;
+                return result;
+            }
+            catch (Exception ex)
+            {
+            }
+            return result;
         }
 
-        public Task<ResultModel<StudentVM>> GetStudent(int id)
+        public async Task<ResultModel<StudentVM>> GetStudent(int id)
         {
-            throw new NotImplementedException();
+            var result = new ResultModel<StudentVM>();
+            var student = _dataContext.Students.FirstOrDefault(x => x.Id == id);
+            if (student == null)
+            {
+                result.AddError($"Teacher with {id} Does Not Exist");
+                return result;
+            }
+            StudentVM studentVM = student;
+            result.Message = "Successfully";
+            result.Data = studentVM;
+            return result;
         }
     }
 }

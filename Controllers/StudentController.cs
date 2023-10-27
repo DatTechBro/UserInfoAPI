@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using UserInfoAPI.Interfaces;
+using UserInfoAPI.Services;
 using UserInfoAPI.Services.DTO;
 
 namespace UserInfoAPI.Controllers
@@ -19,16 +20,23 @@ namespace UserInfoAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateStudent(StudentDTO model)
         {
-            //var result = _studentService.CreateStudent(model);
-            return Ok();
+            var result = await _studentService.CreateStudent(model);
+            return Ok(result);
 
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAllStudents()
         {
-            //var result = _studentService.GetAllStudents();  
-            return Ok();
+            var result = await _studentService.GetAllStudents();
+            return Ok(result);
+        }
+
+        [HttpGet("{id:int}")]
+        public async Task<IActionResult> GetTeacher(int id)
+        {
+            var result = await _studentService.GetStudent(id);  
+            return Ok(result);
         }
 
 
